@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - ${PORTS_FRONT}
+    env_file:
+      - .env  
+  api:
+    build: ./api
+    restart: always
+    ports:
+      - ${PORTS_API}
+    depends_on:
+      - mysql 
+    environment:
+       MYSQL_HOST: ${MYSQL_HOST}
+       MYSQL_USER: ${MYSQL_USER}
+       MYSQL_PORT: ${MYSQL_PORT}
+       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+       MYSQL_DB: ${MYSQL_DB}
+    env_file: 
+      - .env   
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - ${PORTS_ADMIN}
+    env_file:
+      - .env  
